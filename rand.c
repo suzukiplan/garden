@@ -35,6 +35,12 @@ static int table[] = {
 
 static int ptr;
 
+int get_rand256() {
+    ptr++;
+    ptr &= 1023;
+    return table[ptr] & 0xff;
+}
+
 int get_rand1024() {
     ptr++;
     ptr &= 1023;
