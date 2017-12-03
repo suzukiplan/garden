@@ -43,8 +43,20 @@ enum Health {
     
 // 性別
 enum Sex {
-    male = 0,       // Y
-    female = 1      // X
+    sex_unknown = 0,
+    sex_male = 1,           // Y
+    sex_female = 2          // X
+};
+
+// 骨格
+enum Skeleton {
+    sk_none = 0,            // 軟体
+    sk_dwarf = 1,           // 小人
+    sk_slender = 2,         // 細身
+    sk_medium = 3,          // 中肉中背
+    sk_big = 4,             // 大柄
+    sk_fat = 5,             // デブ
+    sk_giant = 6            // 巨人
 };
 
 // 基本パラメタ
@@ -58,6 +70,7 @@ struct Status {
     int life;       // 寿命: 年齢が寿命に達すると, 人物や魔物は死に, 装備品は壊れる
     int health;     // 健康: 異常状態
     int weight;     // 体重: 先制確率+回避率+攻撃力に影響
+    int skeleton;   // 骨格: 体重の増加具合や得意分野に影響する先天的性質
     int hp;         // HP: 0以下で人物や魔物は死に, 装備品は壊れる
     int str;        // 腕力: 与えるダメージ量に影響
     int def;        // 守備: 受けるダメージ量に影響
@@ -80,3 +93,5 @@ struct Element {
     int price;              // 値段
     struct Status status;   // 基本パラメタ
 };
+
+void make_element(struct Element* element, enum Job jobF, enum Job jobM, const char* id, const char* name);
