@@ -82,9 +82,172 @@ void make_element(struct Element* element, enum Job jobF, enum Job jobM, const c
     element->status.hp += element->status.skeleton;
 }
 
-// 年齢を上げる
-void age_up(struct Element* target, struct Element* result) {
-    memset(result, 0, sizeof(struct Element));
-    result->status.age = 1;
+// 体重と魔術パラメタを除くステータスを上げる
+void status_basic_up(struct Element* target, struct Element* added) {
+    // loveとevil以外の全パラメタを低確率で1上昇
+    if (get_rand1024() < 16) {
+        target->status.hp++;
+        added->status.hp++;
+    }
+    if (get_rand1024() < 16) {
+        target->status.str++;
+        added->status.str++;
+    }
+    if (get_rand1024() < 16) {
+        target->status.def++;
+        added->status.def++;
+    }
+    if (get_rand1024() < 16) {
+        target->status.vital++;
+        added->status.vital++;
+    }
+    if (get_rand1024() < 16) {
+        target->status.vital++;
+        added->status.vital++;
+    }
+    if (get_rand1024() < 16) {
+        target->status.speed++;
+        added->status.speed++;
+    }
+    if (get_rand1024() < 16) {
+        target->status.dex++;
+        added->status.dex++;
+    }
+    if (get_rand1024() < 16) {
+        target->status.luck++;
+        added->status.luck++;
+    }
+    if (get_rand1024() < 16) {
+        target->status.intel++;
+        added->status.intel++;
+    }
+    if (get_rand1024() < 16) {
+        target->status.spirits++;
+        added->status.spirits++;
+    }
 
+    // 性別による上昇判定
+    if (target->status.sex == sex_male) {
+        if (get_rand1024() < 72) {
+            target->status.str++;
+            added->status.str++;
+        }        
+        if (get_rand1024() < 64) {
+            target->status.def++;
+            added->status.def++;
+        }        
+        if (get_rand1024() < 86) {
+            target->status.vital++;
+            added->status.vital++;
+        }        
+        if (get_rand1024() < 72) {
+            target->status.speed++;
+            added->status.speed++;
+        }        
+        if (get_rand1024() < 12) {
+            target->status.dex++;
+            added->status.dex++;
+        }
+        if (get_rand1024() < 8) {
+            target->status.luck++;
+            added->status.luck++;
+        }
+        if (get_rand1024() < 12) {
+            target->status.intel++;
+            added->status.intel++;
+        }
+        if (get_rand1024() < 15) {
+            target->status.spirits++;
+            added->status.spirits++;
+        }
+    } else if (target->status.sex == sex_female) {
+        if (get_rand1024() < 32) {
+            target->status.str++;
+            added->status.str++;
+        }        
+        if (get_rand1024() < 38) {
+            target->status.def++;
+            added->status.def++;
+        }        
+        if (get_rand1024() < 56) {
+            target->status.vital++;
+            added->status.vital++;
+        }        
+        if (get_rand1024() < 48) {
+            target->status.speed++;
+            added->status.speed++;
+        }        
+        if (get_rand1024() < 92) {
+            target->status.dex++;
+            added->status.dex++;
+        }
+        if (get_rand1024() < 88) {
+            target->status.luck++;
+            added->status.luck++;
+        }
+        if (get_rand1024() < 102) {
+            target->status.intel++;
+            added->status.intel++;
+        }
+        if (get_rand1024() < 96) {
+            target->status.spirits++;
+            added->status.spirits++;
+        }
+    }
+
+    // 愛と悪の上昇
+    if (target->status.job & job_evil) {
+        if (get_rand1024() < 720) {
+            target->status.evil++;
+            added->status.evil++;
+        }
+    } else {
+        if (target->status.job & job_criminal || target->status.jobF & job_criminal || target->status.jobF & job_criminal) {
+            if (get_rand1024() < 5) {
+                target->status.love++;
+                added->status.love++;
+            }
+            if (get_rand1024() < 128) {
+                target->status.evil++;
+                added->status.evil++;
+            }
+        } else {
+            if (get_rand1024() < 72) {
+                target->status.love++;
+                added->status.love++;
+            }
+        }
+    }
+
+    // TODO: 父親の職業による上昇
+    // TODO: 母親の職業による上昇
+    // TODO: 自身の職業による上昇
+}
+
+// 年齢を上げる
+void age_up(struct Element* target, struct Element* added) {
+    int i;
+    if (!target->alive) return;
+    memset(added, 0, sizeof(struct Element));
+    added->status.age = 1;
+    target->status.age++;
+    if (target->status.life <= target->status.age) {
+        target->alive = 0;
+        return;
+    }
+    // 基礎パラメタの上昇判定を10回行う
+    for (i = 0; i < 10; i++) {
+        status_basic_up(target, added);
+    }
+    // TODO: 体重の増減判定を行う
+}
+
+// 熟練度を上げる
+void rank_up(struct Element* target, struct Element* added) {
+    int i;
+    if (!target->alive) return;
+    memset(added, 0, sizeof(struct Element));
+    added->status.rank = 1;
+    target->status.rank++;
+    status_basic_up(target, added);
 }

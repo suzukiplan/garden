@@ -69,8 +69,8 @@ struct Status {
     int sex;        // 性別: 0=♂, 1=♀
     int life;       // 寿命: 年齢が寿命に達すると, 人物や魔物は死に, 装備品は壊れる
     int health;     // 健康: 異常状態
-    int weight;     // 体重: 先制確率+回避率+攻撃力に影響
     int skeleton;   // 骨格: 体重の増加具合や得意分野に影響する先天的性質
+    int weight;     // 体重: 先制確率+回避率+攻撃力に影響
     int hp;         // HP: 0以下で人物や魔物は死に, 装備品は壊れる
     int str;        // 腕力: 与えるダメージ量に影響
     int def;        // 守備: 受けるダメージ量に影響
@@ -95,3 +95,5 @@ struct Element {
 };
 
 void make_element(struct Element* element, enum Job jobF, enum Job jobM, const char* id, const char* name);
+void age_up(struct Element* target, struct Element* added);
+void rank_up(struct Element* target, struct Element* added);
